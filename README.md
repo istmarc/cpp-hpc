@@ -1,11 +1,23 @@
-# cpp-hpc
+# C++ for high perfomance computing
 
-Examples of using C++ for high performance computing.
+Examples of using modern C++ for high performance computing.
+
+## Examples
+
+- [Newton's method for computing the square root](0_hello_world/newton.cpp)
+
+- [vector class](1_vector/Vector.hpp)
+
+- [Matrix class](2_matrix/Matrix.hpp)
+
+- Matrix multiplication
+
+![Benchmarks for matrix multiplication](2_matrix/bench.png)
 
 ## Run the examples
 
 ```shell
-clang++/g++ -std=c++11 example.cpp
+clang++/g++ -std=c++23 example.cpp
 ```
 
 ## Ressources used
