@@ -1,6 +1,8 @@
 #ifndef CPP_HPC_MATRIX
 #define CPP_HPC_MATRIX
 
+#include "../1_vector/Vector.hpp"
+
 #include <stdexcept>
 #include <vector>
 
@@ -27,7 +29,7 @@ template <class T> class Matrix {
 };
 
 template <class T>
-Matrix<T> reference_matmul(const Matrix<T> &a, const Matrix<T> &b) {
+void reference_matmul(const Matrix<T> &a, const Matrix<T> &b, Matrix<T>& c) {
    if (a.num_cols() != b.num_rows()) {
       throw std::runtime_error(
           "Reference matrix multiplication dimension mismatch.");
@@ -35,7 +37,6 @@ Matrix<T> reference_matmul(const Matrix<T> &a, const Matrix<T> &b) {
    size_t M = a.num_rows();
    size_t N = b.num_cols();
    size_t K = a.num_cols();
-   Matrix<T> c(M, N, T(0));
    for (size_t i = 0; i < M; i++) {
       for (size_t j = 0; j < N; j++) {
          for (size_t k = 0; k < K; k++) {
@@ -43,19 +44,17 @@ Matrix<T> reference_matmul(const Matrix<T> &a, const Matrix<T> &b) {
          }
       }
    }
-   return c;
 }
 
 template <class T>
-Matrix<T> hoisted_matmul(const Matrix<T> &a, const Matrix<T> &b) {
+void hoisted_matmul(const Matrix<T> &a, const Matrix<T> &b, Matrix<T>& c) {
    if (a.num_cols() != b.num_rows()) {
       throw std::runtime_error(
-          "Reference matrix multiplication dimension mismatch.");
+          "Matrix multiplication dimension mismatch.");
    }
    size_t M = a.num_rows();
    size_t N = b.num_cols();
    size_t K = a.num_cols();
-   Matrix<T> c(M, N, T(0));
    for (size_t i = 0; i < M; i++) {
       for (size_t j = 0; j < N; j++) {
          T s = T(0);
@@ -65,19 +64,17 @@ Matrix<T> hoisted_matmul(const Matrix<T> &a, const Matrix<T> &b) {
          c(i, j) = s;
       }
    }
-   return c;
 }
 
 template <class T>
-Matrix<T> blocked_matmul(const Matrix<T> &a, const Matrix<T> &b) {
+void blocked_matmul(const Matrix<T> &a, const Matrix<T> &b, Matrix<T>& c) {
    if (a.num_cols() != b.num_rows()) {
       throw std::runtime_error(
-          "Reference matrix multiplication dimension mismatch.");
+          "Matrix multiplication dimension mismatch.");
    }
    size_t M = a.num_rows();
    size_t N = b.num_cols();
    size_t K = a.num_cols();
-   Matrix<T> c(M, N, T(0));
    for (size_t i = 0; i < M; i += 2) {
       for (size_t j = 0; j < N; j += 2) {
          T s00 = c(i, j);
@@ -96,7 +93,21 @@ Matrix<T> blocked_matmul(const Matrix<T> &a, const Matrix<T> &b) {
          c(i + 1, j + 1) = s11;
       }
    }
-   return c;
+}
+
+template<class T>
+void reference_matvecmul(const Matrix<T>& a, const Vector<T>& b, Vector<T>& c) {
+   if (a.num_cols() != b.num_rows()) {
+      throw
+         std::runtime_error("Matrix vector multiplication dimension mismatch.");
+   }
+   size_t M = a.num_rows();
+   size_t N = a.num_cols();
+   for (size_t i = 0; i < M; i++) {
+      for (size_t j = 0; j < N; j++) {
+         c(i) += a(i, j) * b(j);
+      }
+   }
 }
 
 #endif
