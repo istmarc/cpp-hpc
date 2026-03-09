@@ -12,7 +12,7 @@ Examples of using modern C++ for high performance computing.
 
 - [Timer class](3_timer/Timer.hpp)
 
-- [Sparce Matrix class](4_sparse/SparseMatrix.hpp)
+- [Sparse Matrix class](4_sparse/SparseMatrix.hpp)
 
 - [Threads](5_threads/TestThreads.cpp)
 
