@@ -16,7 +16,7 @@ double bench(std::size_t block_size) {
    std::vector<std::thread> threads;
 
 
-   constexpr size_t intervals = 2048;
+   constexpr size_t intervals = 1024;
    double h = 1.0 / intervals;
    size_t num_blocks = intervals / block_size;
 

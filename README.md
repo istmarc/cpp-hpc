@@ -12,6 +12,16 @@ Examples of using modern C++ for high performance computing.
 
 - [Timer class](3_timer/Timer.hpp)
 
+- [Threads](4_threads/TestThreads.cpp)
+
+- [Multithreading](4_threads/TestMultithreading.cpp)
+
+- [Concurrency](4_threads/TestConcurrent.cpp)
+
+- [Sequential numerical quadrature](4_threads/NumericalQuadratureSeq.cpp)
+
+- [Numerical quadrature in parallel](4_threads/NumericalQuadratureParallel.cpp)
+
 ## Benchamrks
 
 - Matrix multiplication
