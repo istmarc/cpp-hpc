@@ -10,9 +10,11 @@ Examples of using modern C++ for high performance computing.
 
 - [Matrix class](2_matrix/Matrix.hpp)
 
+- [Timer class](3_timer/Timer.hpp)
+
 - Matrix multiplication
 
-![Benchmarks for matrix multiplication](2_matrix/bench.png)
+![Benchmarks for matrix multiplication](3_timer/bench.png)
 
 ## Run the examples
 
