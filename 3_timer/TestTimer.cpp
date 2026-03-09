@@ -27,12 +27,14 @@ int main() {
   if (!file.is_open()) {
     throw std::runtime_error("Error opening file");
   }
-  file << "size;reference;hoisted;register_blocked\n";
+  file << "size;reference;hoisted;register_blocked;tiled\n";
+  std::cout << "size reference hoisted register_blocked tiled\n";
   for (size_t N = 16; N <= 1024; N *= 2) {
-    double ref = benchmark(N, N, N, 10, reference_matmul<double>);
-    double hoisted = benchmark(N, N, N, 10, hoisted_matmul<double>);
-    double blocked = benchmark(N, N, N, 10, blocked_matmul<double>);
-    file << N << ";" << ref << ";" << hoisted << ";" << blocked << "\n";
-    std::cout << N << " " << ref << " " << hoisted << " " << blocked << "\n";
+    double ref = benchmark(N, N, N, 3, reference_matmul<double>);
+    double hoisted = benchmark(N, N, N, 3, hoisted_matmul<double>);
+    double blocked = benchmark(N, N, N, 3, blocked_matmul<double>);
+    double tiled = benchmark(N, N, N, 3, tiled_matmul<double>);
+    file << N << ";" << ref << ";" << hoisted << ";" << blocked << ";" << tiled << "\n";
+    std::cout << N << " " << ref << " " << hoisted << " " << blocked << " " << tiled << "\n";
   }
 }

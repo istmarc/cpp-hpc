@@ -5,6 +5,7 @@
 
 #include <stdexcept>
 #include <vector>
+#include <algorithm>
 
 template <class T> class Matrix {
  public:
@@ -14,13 +15,13 @@ template <class T> class Matrix {
    Matrix(size_t M, size_t N, T init)
        : num_rows_(M), num_cols_(N), storage_(num_rows_ * num_cols_, init) {}
 
-   T &operator()(size_t i, size_t j) { return storage_[i * num_cols_ + j]; }
-   const T &operator()(size_t i, size_t j) const {
+   inline T &operator()(size_t i, size_t j) { return storage_[i * num_cols_ + j]; }
+   inline const T &operator()(size_t i, size_t j) const {
       return storage_[i * num_cols_ + j];
    }
 
-   size_t num_rows() const { return num_rows_; }
-   size_t num_cols() const { return num_cols_; }
+   inline size_t num_rows() const { return num_rows_; }
+   inline size_t num_cols() const { return num_cols_; }
 
  private:
    size_t num_rows_;
@@ -91,6 +92,41 @@ void blocked_matmul(const Matrix<T> &a, const Matrix<T> &b, Matrix<T>& c) {
          c(i, j + 1) = s01;
          c(i + 1, j) = s10;
          c(i + 1, j + 1) = s11;
+      }
+   }
+}
+
+template <class T>
+void tiled_matmul(const Matrix<T> &a, const Matrix<T> &b, Matrix<T>& c) {
+   if (a.num_cols() != b.num_rows()) {
+      throw std::runtime_error(
+          "Matrix multiplication dimension mismatch.");
+   }
+   size_t M = a.num_rows();
+   size_t N = b.num_cols();
+   size_t K = a.num_cols();
+   size_t blocksize = 2ul;
+   for (size_t ii = 0; ii < M; ii += blocksize) {
+      for (size_t jj = 0; jj < N; jj += blocksize) {
+         for (size_t kk = 0; kk < K; kk += blocksize) {
+            for (size_t i = ii; i < ii + blocksize; i+=2) {
+               for (size_t j = jj; j < jj + blocksize; j+=2) {
+                  for (size_t k = 0; k < kk + blocksize; k++) {
+                     c(i, j) += a(i, k) * b(k, j);
+                     c(i, j+1) += a(i, k) * b(k, j+1);
+                     c(i+1,j) += a(i + 1, k) * b(k, j);
+                     c(i+1, j+1) += a(i + 1, k) * b(k, j + 1);
+                  }
+               }
+            }
+         }
+      }
+   }
+   for (size_t i = blocksize * (M/blocksize); i < M; i++) {
+      for (size_t j = blocksize* (N/blocksize); j < N; j++) {
+         for (size_t k = blocksize * (K/blocksize); k < K; k++) {
+            c(i,j) += a(i, k) * b(k, j);
+         }
       }
    }
 }
